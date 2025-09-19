@@ -1,0 +1,32 @@
+.container-envelope{
+    padding: 0 50px;
+    display: flex;
+    justify-content: center;
+    
+}
+.input-gh {
+    width: 150px;
+    height: 30px;
+}
+.input-gioihan {
+    display: flex;
+}
+.container-time {
+    padding-top: 79px;
+}
+@media (max-width:480px) {
+    .container-envelope{
+        display: block;
+        padding: 0px;
+        text-align: center;
+    }
+    .container-time {
+        padding: 0px 15px;
+    }
+    
+}
+@media (max-width:768px) {
+    .input-gioihan {
+        display: block;
+    }
+}

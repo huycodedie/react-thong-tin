@@ -1,0 +1,12 @@
+.container-add {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+.input-gioihan-1 {
+    padding-top: 15px;
+    display: flex;
+}
+.container-time-1 {
+    padding-top: 12px;
+}

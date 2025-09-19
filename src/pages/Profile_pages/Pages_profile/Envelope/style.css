@@ -1,0 +1,11 @@
+.boder-lucky-list-user {
+    padding-top: 10px;
+    justify-content: center;
+    align-items: center;
+}
+.boder-lucky-list-user-child {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 15px;
+    justify-content: flex-start;
+}

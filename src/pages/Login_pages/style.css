@@ -1,0 +1,15 @@
+.backgroud-login {
+justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container {
+    width: 400px;
+    height: 500px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #fff;
+   
+}
