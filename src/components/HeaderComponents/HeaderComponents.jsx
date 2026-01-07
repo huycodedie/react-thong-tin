@@ -1,5 +1,5 @@
-import React,{useState} from 'react';
-import { Col, Modal, Popover } from 'antd';
+import React,{useState,useEffect} from 'react';
+import { Avatar, Col, Modal, Popover } from 'antd';
 import { WrapperHeader, WrapperTextHeader, WrapperHeaderAccout, HindenHeader } from './style';
 import { UserOutlined, CaretDownOutlined } from '@ant-design/icons';
 import Login from '../../pages/Login_pages/Login_pages';
@@ -9,14 +9,25 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as UserService from '../../services/UserService'
 import { resetUser } from "../../redux/slides/userSlide";
 import "./style.css";
+import SpinLoading from '../SpinComponents/SpinLoading.tsx';
 
 const HeaderComponents = () => {
   const navigate = useNavigate()
   const [show, setShow] = useState(false);
   const [show1, setShow1] = useState(false);
+  const [isLoading, setisLoading] = useState(true)
   const user = useSelector((state) => state.user)
   const dispatch = useDispatch()
-  console.log('user',user)
+  // console.log('user',user)
+  useEffect(()=>{
+    
+    if(user?.email){
+      setisLoading(false)
+    }else{
+      setisLoading(false)
+    }
+  },[user])
+  console.log('isloading',isLoading)
   const handshowregister = ()=>{
     setShow1(true);
     setShow(false);
@@ -28,11 +39,13 @@ const HeaderComponents = () => {
     setShow1(false);
     setShow(true);
   }
-   console.log(show1);
-   const handlelogout = async() => {
+  // const storageData = sessionStorage.getItem("access_token")
+  
+  // console.log('token',storageData);
+  const handlelogout = async() => {
     await UserService.logoutUser();
     dispatch(resetUser())
-    localStorage.removeItem('access_token');
+    sessionStorage.removeItem('access_token');
     navigate('/')
    }
   const content = (
@@ -52,33 +65,52 @@ const HeaderComponents = () => {
             </Link>
         </Col>
         <Col flex={1}>
-          <WrapperHeaderAccout>
-            {user?.image_user ? (
-              <image>{user.image_user}</image>
-            ):(
-              <UserOutlined style={{fontSize: '28px'}} />
-            )}
-            
-            {user?.name ? (
-              <div>
-                
-                <Popover content={content} title={user.name} trigger="click">
-                  <div>{user.name}</div>
-                </Popover>
-              </div>
+            {user?.email ? (
+              
+               
+                <WrapperHeaderAccout>
+                 <Popover
+                      content={content}
+                      title={user?.name || user?.email}
+                      trigger="click" 
+                    >
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    {user?.image_user ? (
+                      <Avatar size={42} src={user.image_user} />
+                    ) : (
+                      <UserOutlined style={{ fontSize: "28px" }} />
+                    )}
+                    <div>{user?.name || user?.email}</div>
+                  </div>
+                    </Popover>
+              </WrapperHeaderAccout>
+              
+              
+              
             ) : (
-                <HindenHeader onClick={() => {
-                  setShow(true);
-                }}>
+              isLoading ? (
+                <WrapperHeaderAccout>
+                  <Popover>
+                    <SpinLoading/>
+                  </Popover>
+                </WrapperHeaderAccout>
+              ):(
+              <WrapperHeaderAccout>
+                <HindenHeader
+                  onClick={() => {
+                    setShow(true);
+                  }}
+                >
                   <span>Đăng nhập/Đăng ký</span>
                   <div>
                     <span>Tài khoản</span>
                     <CaretDownOutlined />
                   </div>
                 </HindenHeader>
+              </WrapperHeaderAccout>
+              )
             )}
-              
-          </WrapperHeaderAccout>
+
           <Modal open={show}
                afterOpenChange={open => 
                   setShow(open)

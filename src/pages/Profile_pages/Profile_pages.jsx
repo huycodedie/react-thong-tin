@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   UserOutlined,
   UploadOutlined, 
@@ -7,8 +7,10 @@ import {
 import { Layout, Menu, theme } from 'antd';
 import {tabprofile} from '../../routes/tab_profile'
 import { Routes, Route,Link } from 'react-router-dom'
+// import { useSelector } from 'react-redux';
+import {useNavigate} from 'react-router-dom'
 // import Luckymoneylistuser from './Pages_profile/Envelope/lucky_money_list_user';
-
+import { useAppMessage } from "../../components/Message/MessageAnt";
 
 const { Content, Footer, Sider } = Layout;
 const items = [
@@ -24,6 +26,16 @@ const items = [
 ];
 
 const Profile_pages = () => {
+  const { error } = useAppMessage();
+  const navigate = useNavigate()
+ 
+  const storageData = sessionStorage.getItem("access_token")
+  useEffect(()=>{
+    if(!storageData){
+      navigate('/')
+      error("Vui lòng đăng nhập trước!");
+    }
+  },[storageData,navigate,error])
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -35,10 +47,10 @@ const Profile_pages = () => {
         breakpoint="lg"
         collapsedWidth="0"
         onBreakpoint={broken => {
-          console.log(broken);
+          // console.log(broken);
         }}
         onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
+          // console.log(collapsed, type);
         }}
       >
         <div className="demo-logo-vertical" />
@@ -50,10 +62,10 @@ const Profile_pages = () => {
           <div
             style={{
               padding: 24,
-              maxHeight: 760,
-              minHeight: 760,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
+    minHeight: 'calc(100vh - 128px)',  // 64px header + 64px footer
+    background: colorBgContainer,
+    borderRadius: borderRadiusLG,
+    overflowY: 'auto',
             }}
           >
            
@@ -63,7 +75,7 @@ const Profile_pages = () => {
             return (
               <Route key={route.path} path={route.path} element={
               <Layout>
-                <div>
+                <div style={{padding:'9px',height:'100%',overflow:'auto'}}>
                   <Page/>
                 </div>
               </Layout>

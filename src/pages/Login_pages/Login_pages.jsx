@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/slides/userSlide";
 
 
+
 const Login_pages = ({hand, handloginsuccess}) => {
   const { success, error } = useAppMessage();
   const [email, setEmail] = useState("");
@@ -23,10 +24,11 @@ const Login_pages = ({hand, handloginsuccess}) => {
   )
   const {data, isLoading ,isError, isSuccess} = mutation
 
-    useEffect(() =>{
+  useEffect(() =>{
     if(isSuccess && data?.status === 'OK'){
       success("Đăng nhập thành công!");
-      localStorage.setItem("access_token", JSON.stringify(data?.access_token))
+      handloginsuccess();
+      sessionStorage.setItem("access_token", JSON.stringify(data?.access_token))
       if(data?.access_token){
         const decode = jwtDecode(data?.access_token)
         console.log('decode',decode)
@@ -57,7 +59,7 @@ const Login_pages = ({hand, handloginsuccess}) => {
      email: values.email,
      password: values.password
     })
-    handloginsuccess();
+    
   console.log('Success:', values);
   };
   const onFinishFailed = errorInfo => {
@@ -82,7 +84,9 @@ const Login_pages = ({hand, handloginsuccess}) => {
   //   }, 3000);
   // };
   return (
-    <div className="backgroud-login">
+   <>
+   <title>Đăng nhập</title>
+     <div className="backgroud-login">
 
         <h1 style={{paddingTop:'15px'}}>Đăng nhập</h1>
         <Form
@@ -95,8 +99,10 @@ const Login_pages = ({hand, handloginsuccess}) => {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
           layout="vertical"
+    
         >
           <Form.Item
+          
             label="Email"
             name="email"
             rules={[{ required: true, message: 'Please input your email!' }]}
@@ -131,6 +137,7 @@ const Login_pages = ({hand, handloginsuccess}) => {
         }>Đăng ký</span></span>
         </div>
       </div>
+   </>
 
   );
 };

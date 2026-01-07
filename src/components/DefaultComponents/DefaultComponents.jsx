@@ -5,6 +5,7 @@ const Default_Components = ({children}) => {
   return (
     <div>
         <HeaderComponents/>
+        
         {children}
     </div>
   )

@@ -1,0 +1,7 @@
+.link-button {
+    border-color: rgb(235, 3, 3);
+    color: #171a1f;
+    cursor: pointer;
+    font-size: inherit;
+    background-color: aqua;
+}

@@ -69,7 +69,9 @@ const Register_pages = ({handshowregister}) => {
   //     }, 3000);
   //   };
   return (
-    <div className="backgroud-login">
+    <>
+      <title>Đăng ký</title>
+      <div className="backgroud-login">
       <div className="container">
         <h1 style={{paddingTop:'15px'}}>Đăng ký</h1>
           <Form
@@ -123,6 +125,7 @@ const Register_pages = ({handshowregister}) => {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

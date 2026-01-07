@@ -2,14 +2,18 @@ import React,{useState} from 'react'
 import { Cart,  Image, Left, Right} from './style'
 import anh from '../../image/anh.jpg'
 import './style.css'
-import { datalucky } from './datalucky'
-import Notificationmoney from './Notification_money/Notification_money';
+import Notificationmoney from './Notification_money/Notification_money'
 import ResultError from '../../components/Result/Result_Error'
 import { Modal } from 'antd';
+import * as EnvelopeService from '../../services/EnvelopeService.js'  
 
-function Itemlucky ({textspan,money,Name_money,result,sethandResult}) {
+  const thembox = async (idbox, idmoney, iduser, money) => {
+    await EnvelopeService.postuserbox(idbox, idmoney, iduser, money)
+  };
+
+function Itemlucky ({textspan,idbox,idmoney,iduser,money,Name_money,result,sethandResult}) {
   const [show, setShow] = useState(false);
-
+  
   const handshowmoney =()=>{
     setShow(false);
   }
@@ -17,7 +21,7 @@ function Itemlucky ({textspan,money,Name_money,result,sethandResult}) {
   return (        
     <div>
       <Cart role="listitem-cart" onClick={()=>{
-      setShow(true);
+        setShow(true) 
       }}>
       <Left role='left'>
         <Image role="image">
@@ -38,6 +42,7 @@ function Itemlucky ({textspan,money,Name_money,result,sethandResult}) {
                       maxWidth: '300px'} }>
           {textspan || 'Chúc bạn 1 năm mới ' + new Date().getFullYear() + ' vui vẻ'}
           {money}
+          {idmoney}
           </span>
       </Right>
     </Cart>
@@ -48,9 +53,23 @@ function Itemlucky ({textspan,money,Name_money,result,sethandResult}) {
         onCancel={() => {
         setShow(false); setTimeout(()=>{sethandResult()})}
       }>
-      {result === false ? <Notificationmoney Name_money={Name_money} gia_tri={money} handmoney={handshowmoney} handresultset={sethandResult}/> : 
+      {result === false ? 
+      <Notificationmoney 
+        Name_money={Name_money}
 
-      <ResultError name_title={"Nhận Lì Xì thất bại"} name_subtitle={"Bạn đã nhận lì xì rồi không thể nhận thêm nữa"} handmoney={handshowmoney}/>}
+        iduser={iduser}
+        idbox={idbox}
+        idmoney={idmoney}
+        gia_tri={money} 
+        handleThemUser={thembox}
+
+        handmoney={handshowmoney} 
+        handresultset={sethandResult}/> 
+      : 
+      <ResultError 
+        name_title={"Nhận Lì Xì thất bại"} 
+        name_subtitle={"Bạn đã nhận lì xì rồi không thể nhận thêm nữa"} 
+        handmoney={handshowmoney}/>}
     </Modal>
     </div>
     
@@ -65,7 +84,8 @@ const shuffleArray = (array) => {
   }
   return shuffled;
 };
-const Lucky_money_pages = ({handshow}) => {
+const Lucky_money_pages = ({data, iduser, handshow}) => {
+
   const [result, setResult] = useState(false);
 
   const handresult =()=>{
@@ -76,30 +96,41 @@ const Lucky_money_pages = ({handshow}) => {
   return (
     <div style={{display:'grid', alignItems:'center', justifyContent:'center'}}>
       <div className='Luckymoney'>
-        {datalucky.map((item) => {
+        {(() => {
+          const item = data?.data;
           // Lọc bỏ những giatri có soluong = 0
-          let filteredList = item.giatri.filter(gt => parseInt(gt.soluong) > 0);
+          let filteredList = item.value.filter(gt => parseInt(gt.quantity) > 0);
 
           // Tìm item có soluong > 500 (dùng làm phần tử bù)
-          const bigItem = filteredList.find(gt => parseInt(gt.soluong) > 500);
+          const bigItem = filteredList.find(gt => parseInt(gt.quantity) > 500);
 
           // Nếu số item hiện tại chưa đủ sl => bù thêm từ bigItem
-          if (bigItem && filteredList.length < item.sl) {
-            const missing = item.sl - filteredList.length;
+          if (bigItem && filteredList.length < item.quantityBox) {
+            const missing = item.quantityBox - filteredList.length;
             for (let i = 0; i < missing; i++) {
               filteredList.push({ ...bigItem, id: bigItem.id + '-extra-' + i });
             }
           }
           filteredList = shuffleArray(filteredList);
           return(
-            <div key={item.key} className={`Container ${item.sl === 4 || item.sl === 2 ? "column-2" : "column-3" }` }>
-            {filteredList.map((gt) =>(
-              <Itemlucky key={gt.id} money={gt.sotien} Name_money={item.name} result={result} sethandResult={handresult}></Itemlucky>
-            ))}   
-            
+            <div key={item._id} className={`Container ${item.quantityBox === 4 || item.quantityBox === 2 ? "column-2" : "column-3" }` }>
+            {filteredList.map((gt, index) => (
+              <Itemlucky
+                key={index}
+
+                idbox={item._id}
+                idmoney={gt._id}
+                iduser={iduser}
+                money={gt.money}
+
+                Name_money={item.feature}
+                result={result}
+                sethandResult={handresult}
+              />
+            ))}
           </div>
           )
-        })}
+        })()}
          
       </div>
       <div style={{textAlign:'end',paddingRight:'20px',paddingTop:"15px"}}>

@@ -1,74 +1,148 @@
 import React,{useState} from 'react'
 import './style.css'
-import { Input, InputNumber,DatePicker } from 'antd';
+import { Input, InputNumber, Form, Space, Button, DatePicker, Radio } from 'antd';
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const onOk = value => {
-  console.log('onOk: ', value);
-};
-const onChange = (e) => {
-  console.log(e);
-};
-const Add_lucky = () => {
-  const [text, setText] = useState('50'); 
-  const [textvh, setTextVh] = useState('50');
-  const hand = (value)=>{
-    setText(value)
-  }
-  const handvh = (value)=>{
-    setTextVh(value)
-  }
+const Add_lucky = ({iduser, roles, handleShowCreate, handleCreateBox}) => {
 
+  const [featureValue, setFeatureValue] = useState("");
+
+  const config = {
+    rules: [{ type: 'object', required: true, message: 'Vui lòng chọn thời gian!' }],
+  };
+  
+  const onFinish = values => {
+      const valueArray = values.value || [];
+
+    const infinityMoney = values.infinityMoney;
+  
+    if (infinityMoney !== undefined) {
+      valueArray.push({
+        money: infinityMoney
+      });
+    }
+    const payload = {
+      ...values,
+      value: valueArray,
+      user: iduser,
+    };
+    handleCreateBox(payload)
+    console.log('Received values of form:', payload);
+    handleShowCreate()
+  };
   return (
-    <div className='container-add'>
-      <div style={{}}>
-        <div style={{textAlign:'center'}}>
-          <h2>Tạo Lì Xì</h2>
-        </div>
-        <div style={{}}>
-          <label style={{paddingRight:'15px'}} htmlFor="đá">Tên lì xì</label>
-          <Input style={{width:'200px'}} placeholder="input with clear icon" allowClear onChange={onChange} />
-        </div>
-        <div className='input-gioihan-1'>
-          <div >
-            <label style={{display:'block'}} >Giá giới hạn {text} nghìn </label>
-            <InputNumber min={1} max={999999} className='input-gh' value={text} onChange={hand}/>
-          </div>
-          <div style={{paddingLeft:'5px'}}>
-            <label style={{paddingLeft:'0px',display:'block'}}>số lượng</label>
-            <InputNumber style={{width:'50px'}} min={1} max={10} defaultValue={2}/>
-          </div>
-        </div>
-        <div style={{paddingTop:'10px'}}>
-            <label style={{display:'block'}} >Giá vô hạn {textvh} nghìn </label>
-            <InputNumber min={1} max={999999} className='input-gh' value={textvh} onChange={handvh}/>
-        </div>
-        <div className='container-time-1'>
-          <div >
-            <div >
-              <label style={{display:'block'}} >Ngày bắt đầu:</label>
-              <DatePicker
-                showTime
-                onChange={(value, dateString) => {
-                  console.log('Selected Time: ', value);
-                  console.log('Formatted Selected Time: ', dateString);
-                }}
-                onOk={onOk}
-              />
-            </div>
-          </div>
-          <div style={{paddingTop:'10px'}}>
-              <label style={{display:'block'}} >Ngày kết thúc:</label>
-              <DatePicker
-                showTime
-                onChange={(value, dateString) => {
-                  console.log('Selected Time: ', value);
-                  console.log('Formatted Selected Time: ', dateString);
-                }}
-                onOk={onOk}
-              />
-          </div>
-          </div>
-      </div>
+    <div style={{display:'flex',justifyContent:'center'}}>
+      <Form
+        name="dynamic_form_nest_item"
+        onFinish={onFinish}
+        style={{ maxWidth: 600 ,textAlign:'center'}}
+        autoComplete="off"
+      >
+        <Form.Item
+          label="Name"
+          name="nameEnvelope"
+          rules={[{ required: true, message: 'Vui lòng nhập tên lì xì!' }]}
+        >
+          <Input />
+        </Form.Item>
+        <span label='dsadsa' style={{display:'flex'}}>Giá trị may mắn{iduser} </span>
+        <Form.List name="value">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map(({ key, name, ...restField }) => (
+                   <Space key={key} style={{ display: 'flex', marginBottom: 8,justifyContent:'center' }} align="baseline">
+                  <Form.Item
+                    label='gt'
+                    {...restField}
+                    name={[name, 'money']}
+                    rules={[{ required: true, message: 'nhập số tiền' }]}
+                  >
+                    <InputNumber placeholder="First Name" />
+                  </Form.Item>
+                  <Form.Item
+                    label="sl"
+                    {...restField}
+                    name={[name, 'quantity']}
+                    rules={[{ required: true, message: 'nhập số lượng' }]}
+                  >
+                    <InputNumber placeholder="Last Name" />
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(name)} />
+                </Space>
+              ))}
+
+              <Form.Item>
+                <Button type="dashed" style={{width:'300px'}} onClick={() => add()} block icon={<PlusOutlined />}>
+                  Thêm
+                </Button>
+              </Form.Item>
+              
+            </>
+          )}
+        </Form.List>
+        <Form.Item
+          label="Giá trị vô hạn"
+          name="infinityMoney"
+          rules={[{ required: true, message: 'Vui lòng nhập giá trị vô hạn' }]}
+        >
+          <InputNumber placeholder="Nhập giá trị vô hạn" />
+        </Form.Item>
+        {roles === 'Admin' && (
+          <Form.Item 
+            label="Mục gì"
+            name='feature'
+            >
+            <Radio.Group onChange={(e) => setFeatureValue(e.target.value)} >
+              <Radio value='Normal'> Normal </Radio>
+              <Radio value='Birthday'> Birthday </Radio>
+              <Radio value='select-user' > select-user </Radio>
+            </Radio.Group>
+          </Form.Item>
+        )}
+
+          {featureValue === 'select-user' && (
+            <Form.Item 
+          label="Số chắc thê"
+          name='quantityBox'
+          rules={[{ required: true, message: 'Vui lòng chọn số lượng lì xì' }]}
+          >
+          <Radio.Group >
+            <Radio value={2}> 2 </Radio>
+            <Radio value={4}> 4 </Radio>
+            <Radio value={6}> 6 </Radio>
+          </Radio.Group>
+        </Form.Item>
+          )}
+
+        <Form.Item 
+          label="Số lượng lì xì"
+          name='quantityBox'
+          rules={[{ required: true, message: 'Vui lòng chọn số lượng lì xì' }]}
+          >
+          <Radio.Group >
+            <Radio value={2}> 2 </Radio>
+            <Radio value={4}> 4 </Radio>
+            <Radio value={6}> 6 </Radio>
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label="Lời chúc người nhận"
+          name="note"
+        >
+          <Input.TextArea />
+        </Form.Item>
+        <Form.Item name="runningtime" label="Thời gian hoạt động" {...config}>
+          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+        </Form.Item>
+        <Form.Item name="endtime" label="Thời gian kết thúc" {...config}>
+          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" >
+            Submit
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   )
 }

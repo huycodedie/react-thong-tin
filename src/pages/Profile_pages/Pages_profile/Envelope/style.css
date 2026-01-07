@@ -1,11 +1,119 @@
 .boder-lucky-list-user {
-    padding-top: 10px;
+    padding-top: 9px;
     justify-content: center;
     align-items: center;
 }
-.boder-lucky-list-user-child {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 15px;
-    justify-content: flex-start;
+.container-list{
+  overflow-y: auto;
+  max-height: 62vh;
+  
+
+}
+.container-lucky-list-user-child {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  
+}
+.body-card {   
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, #0a0a0a, #000);
+  font-family: sans-serif;
+  color: #fff;
+  border-radius: 20%;
+}
+
+.container-car {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.electric-card {
+  position: relative;
+  max-width: 320px;
+  width: 100%;
+  padding: 2rem;
+  border-radius: 20px;
+  background: linear-gradient(to bottom, #111, #000);
+  overflow: hidden;
+  z-index: 0;
+  
+}
+.tag {
+  display: inline-block;
+  background: rgba(0, 247, 255, 0.2);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+p {
+  color: #aaa;
+  margin-bottom: 1.5rem;
+}
+
+.tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.btn {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+
+.tags span {
+  background: #222;
+  color: #ccc;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+}
+
+.btn-click-get {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(to right, #00f7ff, #00aaff);
+  color: #000;
+  transition: transform 0.2s;
+}
+.btn-click-delete {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(to right, #993535, #f60000);
+  color: #000;
+  transition: transform 0.2s;
+}
+
+.btn-click-get:hover {
+  transform: scale(1.05);
+}
+.btn-click-delete:hover {
+  transform: scale(1.05);
 }

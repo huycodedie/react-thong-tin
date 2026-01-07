@@ -4,7 +4,7 @@ export const ButtonLoading = ({ name, isLoading, handvalueclick, ...props}) => {
       const [loadings, setLoadings] = useState([]);
     
       const enterLoading = (index) => {
-        console.log("Start loading:", index);
+     
     
         setLoadings((prevLoadings) => {
           const newLoadings = [...prevLoadings];

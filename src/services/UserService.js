@@ -12,10 +12,6 @@ export const siginUser = async (data) =>{
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/sign-up`,data)
     return res.data
 }
-export const laylucky = async (data) =>{
-     const res = await axios.get(`${process.env.REACT_APP_API_URL}/envelope/get-details/${data}`)
-    return res.data
-}
 export const getDetailsUser = async (id,access_token) =>{
     const res = await axiosJWT.get(`${process.env.REACT_APP_API_URL}/user/get-details-user/${id}`,{
         headers: {
@@ -36,5 +32,9 @@ export const logoutUser = async () =>{
         {},
         {withCredentials: true}
     )
+    return res.data
+}
+export const putUpdateUser = async (id,data) =>{
+    const res = await axios.put(`${process.env.REACT_APP_API_URL}/user/update-user/${id}`,data)
     return res.data
 }

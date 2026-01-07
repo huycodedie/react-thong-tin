@@ -9,21 +9,18 @@ import * as UserService from './services/UserService'
 import { useDispatch } from 'react-redux';
 import { updateUser } from './redux/slides/userSlide';
 
-// import axios from 'axios';
-// import { useQuery } from '@tanstack/react-query';
-
 function App() {
   const dispatch = useDispatch()
-
+  
   useEffect(() =>{
     let {storageData, decoded} = handleDecoded()
     if(decoded?.id){
       handleGetDetailsUser(decoded?.id,storageData)
     }    
-  },[])  
+  })  
 
   const handleDecoded = () =>{
-    let storageData = localStorage.getItem('access_token')
+    let storageData = sessionStorage.getItem('access_token')
     let decoded = {}
     if(storageData && isJsonString(storageData)){
       storageData = JSON.parse(storageData)
@@ -39,6 +36,7 @@ function App() {
       if(decoded?.exp < currentTime.getTime() / 1000){
         const data = await UserService.refreshToken()
         config.headers['token'] = `Bearer ${data?.access_token}`
+        sessionStorage.setItem("access_token", JSON.stringify(data?.access_token))
       }
 
       return config;
@@ -48,33 +46,29 @@ function App() {
     });
 
   const handleGetDetailsUser = async (id, token)=>{
-    const timetoken = Date.now() / 1000;
-    const decodedtoken = jwtDecode(token)
-    if(decodedtoken.exp < timetoken){
-      const res = await UserService.getDetailsUser(id,token)
-      dispatch(updateUser({...res?.data, access_token: token}))
-    }
+    const res = await UserService.getDetailsUser(id,token)
+    dispatch(updateUser({...res?.data, access_token: token}))
   }
   return (
-    <div>
-    <MessageProvider>
-      <Router>
-        <Routes>
-          {tab.map((route) => {
-            const Page = route.page
-            const Layout = route.isShow ? Default_components : Fragment
-            return (
-              <Route key={route.path} path={route.path} element={
-              <Layout>
-                <div>
-                  <Page/>
-                </div>
-              </Layout>
-            }/>
-            )
-          })}
-        </Routes>
-      </Router>
+    <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+      <MessageProvider>
+        <Router>
+          <Routes>
+            {tab.map((route) => {
+              const Page = route.page
+              const Layout = route.isShow ? Default_components : Fragment
+              return (
+                <Route key={route.path} path={route.path} element={
+                <Layout>
+                  <div>
+                    <Page/>
+                  </div>
+                </Layout>
+              }/>
+              )
+            })}
+          </Routes>
+        </Router>
       </MessageProvider>
     </div>
   );

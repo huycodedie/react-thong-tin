@@ -1,43 +1,35 @@
-import React,{useState} from 'react'
-import Cardlist from '../../../../components/Card/Card_list'
-import anh from '../../../../image/anh.jpg'
-import './style.css'
-import { Modal, Avatar } from 'antd';
-import Addlucky from '../Add/Add_lucky/Add_lucky';
-import { PlusOutlined } from '@ant-design/icons';
+import React from 'react'
 
+import './style.css'
+import { Tabs} from 'antd';
+import { useSelector } from 'react-redux';
+import { Received } from './received/Received';
+import { Created } from './created/Created';
 
 const Lucky_money_list_users = () => {
-const [show, setShow] = useState(false);
+  const user = useSelector((state) => state.user)
+  const storageData = sessionStorage.getItem("access_token")
+    // console.log('datta',data?.data)
+    // console.log('load',isLoading)
+    // console.log('show',show)
 
-  let Id = 28;
   return (
-    <div className='boder-lucky-list-user' >
-      <div style={{textAlign:'center'}}>
-        <Avatar onClick={()=> setShow(true)} style={{cursor:'pointer'}}
-            size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
-            icon={<PlusOutlined />}
-        />
-      </div>
-      <div className='boder-lucky-list-user-child'>
-      
-        {/* <Cardlist  imgercard={"https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"} titlecard={"thêm lì xì"} onClick={()=>{
-      setShow(true);
-      }} describecard={"cùng trao nhiều lì xì nào"} tinhnang={""}/> */}
-        {Array(Id).fill().map((item, index) =>(
-              <Cardlist imgercard={anh} titlecard={"thêm lì xì"} describecard={"cùng trao nhiều lì xì nào"} tinhnang={"1"}/>
-            ))}
-      </div>
-      <Modal open={show}
-              afterOpenChange={open => 
-                setShow(open)
-              }
-              onCancel={() => {
-              setShow(false); setTimeout(()=>{})}
-            }>
-            <Addlucky/>
-            </Modal>
-    </div>
+    <Tabs
+        defaultActiveKey="1"
+        centered
+        items={Array.from({ length: 2 }).map((_, i) => {
+        const id = String(i + 1);
+        return id === '1'
+          ? { label: 'Tạo lì xì', key: id, children: 
+          <div>
+            <Created Iduser={user.id}  roles={user.roles} token={storageData}/>
+          </div> }
+          : { label: 'lì xì đã nhận', key: id, children: 
+          <div>
+            <Received Iduser={user.id}/>
+          </div> };
+        })}
+    />
   )
 }
 

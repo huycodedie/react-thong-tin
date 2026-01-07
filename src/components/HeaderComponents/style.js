@@ -27,9 +27,9 @@ export const WrapperHeaderAccout = styled.div`
     cursor: pointer;
 `
 export const HindenHeader = styled.div`
-    display: none;
+    /* display: none;
 
     @media (min-width: 768px){
     display: block;
-    }
+    } */
 `
